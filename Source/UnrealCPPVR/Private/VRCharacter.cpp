@@ -3,6 +3,9 @@
 #include "VRCharacter.h"
 #include "Classes/Camera/CameraComponent.h"
 #include "Components/SceneComponent.h"
+#include "Classes/Engine/World.h"
+#include "Components/StaticMeshComponent.h"
+#include "Public/DrawDebugHelpers.h"
 #include "Classes/Components/InputComponent.h"
 	
 
@@ -16,6 +19,9 @@ AVRCharacter::AVRCharacter()
 	VRRoot->SetupAttachment(GetRootComponent());
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(VRRoot);
+	DestinationMarker = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DestinationMarker"));
+	DestinationMarker->SetupAttachment(GetRootComponent());
+
 }
 
 // Called when the game starts or when spawned
@@ -34,6 +40,8 @@ void AVRCharacter::Tick(float DeltaTime)
 	NewCameraOffset.Z = 0;
 	AddActorWorldOffset(NewCameraOffset);
 	VRRoot->AddWorldOffset(-NewCameraOffset);
+
+	UpdateTeleportDestination();
 	
 }
 
@@ -51,7 +59,20 @@ void AVRCharacter::MoveForward(float Throttle)
 	AddMovementInput(Throttle * Camera->GetForwardVector());
 	
 }
+
 void AVRCharacter::MoveRight(float Throttle)
 {
 	AddMovementInput(Throttle * Camera->GetRightVector());
+}
+
+void  AVRCharacter::UpdateTeleportDestination()
+{
+	FHitResult TeleportDestination;
+	auto Start = Camera->GetComponentLocation();
+	auto End = Start + Camera->GetForwardVector() * MaxTeleportDistance;
+
+	bool Hit = GetWorld()->LineTraceSingleByChannel(TeleportDestination, Start, End, ECC_Visibility);
+	if (Hit) { DestinationMarker->SetWorldLocation(TeleportDestination.Location); }
+
+	return;
 }
