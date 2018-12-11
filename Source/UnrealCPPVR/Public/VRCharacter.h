@@ -31,6 +31,8 @@ private:
 
 	void UpdateTeleportDestination();
 
+	void BeginTeleport();
+
 	UPROPERTY()
 	class USceneComponent* VRRoot;
 	UPROPERTY()

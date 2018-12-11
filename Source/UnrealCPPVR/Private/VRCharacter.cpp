@@ -28,6 +28,8 @@ AVRCharacter::AVRCharacter()
 void AVRCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	DestinationMarker->SetVisibility(false);
 	
 }
 
@@ -51,7 +53,7 @@ void AVRCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	PlayerInputComponent->BindAxis(TEXT("Move Forward"), this, &AVRCharacter::MoveForward);
 	PlayerInputComponent->BindAxis(TEXT("Move Right"), this, &AVRCharacter::MoveRight);
-
+	PlayerInputComponent->BindAction(TEXT("Teleport"), IE_Released, this, &AVRCharacter::BeginTeleport);
 }
 
 void AVRCharacter::MoveForward(float Throttle)
@@ -72,7 +74,16 @@ void  AVRCharacter::UpdateTeleportDestination()
 	auto End = Start + Camera->GetForwardVector() * MaxTeleportDistance;
 
 	bool Hit = GetWorld()->LineTraceSingleByChannel(TeleportDestination, Start, End, ECC_Visibility);
-	if (Hit) { DestinationMarker->SetWorldLocation(TeleportDestination.Location); }
+	if (Hit)
+	{
+		DestinationMarker->SetWorldLocation(TeleportDestination.Location); 
+
+		DestinationMarker->SetVisibility(true);
+	}
+	else { DestinationMarker->SetVisibility(false); }
 
 	return;
 }
+
+void  AVRCharacter::BeginTeleport()
+{}
