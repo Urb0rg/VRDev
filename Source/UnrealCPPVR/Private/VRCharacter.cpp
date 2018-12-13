@@ -4,7 +4,11 @@
 #include "Classes/Camera/CameraComponent.h"
 #include "Components/SceneComponent.h"
 #include "Classes/Engine/World.h"
+#include "Classes/Camera/PlayerCameraManager.h"
 #include "Components/StaticMeshComponent.h"
+#include "Classes/GameFramework/PlayerController.h"
+#include "Public/TimerManager.h"
+#include "Components/CapsuleComponent.h"
 #include "Public/DrawDebugHelpers.h"
 #include "Classes/Components/InputComponent.h"
 	
@@ -86,4 +90,21 @@ void  AVRCharacter::UpdateTeleportDestination()
 }
 
 void  AVRCharacter::BeginTeleport()
-{}
+{
+
+	
+	APlayerController* PC = Cast<APlayerController>(GetController());
+	if (PC != nullptr)
+	{
+		PC->PlayerCameraManager->StartCameraFade(0, 1, TeleportFadeTime, FLinearColor::Black );
+	}
+	FTimerHandle Handle;
+	GetWorldTimerManager().SetTimer(Handle, this, &AVRCharacter::EndTeleport, TeleportFadeTime);
+		
+}
+
+void AVRCharacter::EndTeleport()
+{
+	FVector Vec (0, 0, GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
+	SetActorLocation(DestinationMarker->GetComponentLocation() + Vec);
+}

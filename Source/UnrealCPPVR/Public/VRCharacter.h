@@ -32,6 +32,7 @@ private:
 	void UpdateTeleportDestination();
 
 	void BeginTeleport();
+	void EndTeleport();
 
 	UPROPERTY()
 	class USceneComponent* VRRoot;
@@ -43,4 +44,6 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
 		float MaxTeleportDistance = 10000.f;
+	UPROPERTY(EditAnywhere, Category = "Setup")
+		float TeleportFadeTime = 0.7;
 };
