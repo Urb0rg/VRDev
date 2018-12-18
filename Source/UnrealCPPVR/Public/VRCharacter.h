@@ -28,9 +28,9 @@ public:
 private:
 	void MoveForward(float Throttle);
 	void MoveRight(float Throttle);
-
+	bool FindTeleportDestination(FVector &OutLocation);
 	void UpdateTeleportDestination();
-
+	void StartFade(float FromAlpha, float ToAlpha);
 	void BeginTeleport();
 	void EndTeleport();
 
@@ -46,4 +46,7 @@ private:
 		float MaxTeleportDistance = 10000.f;
 	UPROPERTY(EditAnywhere, Category = "Setup")
 		float TeleportFadeTime = 0.7;
+
+	UPROPERTY(EditAnywhere, Category = "Setup")
+		FVector TeleportProjectionExtent = FVector (100, 100, 100);
 };
