@@ -33,20 +33,50 @@ private:
 	void StartFade(float FromAlpha, float ToAlpha);
 	void BeginTeleport();
 	void EndTeleport();
+	void UpdateBlinkers();
+	FVector2D GetBlinkerCentre();
 
 	UPROPERTY()
 	class USceneComponent* VRRoot;
 	UPROPERTY()
 	class UCameraComponent* Camera;
 
+	UPROPERTY(EditAnywhere)
+		class UMotionControllerComponent* LeftController;
+	UPROPERTY(EditAnywhere)
+		class UMotionControllerComponent* RightController;
+
+	UPROPERTY()
+		class UPostProcessComponent* PostProcessComponent;
+
+	UPROPERTY()
+		UMaterialInstanceDynamic* BlinkerMaterialInstance;
+	
+
 	UPROPERTY(VisibleAnywhere)
 	class UStaticMeshComponent* DestinationMarker;
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
+		UMaterialInterface* BlinkerMaterialBase;
+
+	UPROPERTY(EditAnywhere, Category = "Setup")
 		float MaxTeleportDistance = 10000.f;
+
+	UPROPERTY(EditAnywhere, Category = "Setup")
+		float TeleportProjectileRadius = 10.f;
+
+	UPROPERTY(EditAnywhere, Category = "Setup")
+		float TeleportProjectileSpeed = 1000.f;
+
+
+	UPROPERTY(EditAnywhere, Category = "Setup")
+		float TeleportSimulationTime= 8.f;
+
 	UPROPERTY(EditAnywhere, Category = "Setup")
 		float TeleportFadeTime = 0.7;
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
 		FVector TeleportProjectionExtent = FVector (100, 100, 100);
+	UPROPERTY(EditAnywhere, Category = "Setup")
+		UCurveFloat* RadiusVSVelocity;
 };
